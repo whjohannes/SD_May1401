@@ -14,6 +14,7 @@
 		strZONE5 = "";
 		var ZONE4_state = 0;
 		var ZONE5_state = 0;
+
 		function GetArduinoIO()
 		{
 			nocache = "&nocache=" + Math.random() * 1000000;
@@ -62,31 +63,31 @@
 							}
 							// LED 4
 							if (this.responseXML.getElementsByTagName('LED')[3].childNodes[0].nodeValue === "on") {
-								document.getElementById("LED4").innerHTML = "LED 4 is ON (D9)";
+								document.getElementById("LED4").innerHTML = "LED 4 is ON";
 								LED4_state = 1;
 							}
 							else {
-								document.getElementById("LED4").innerHTML = "LED 4 is OFF (D9)";
+								document.getElementById("LED4").innerHTML = "LED 4 is OFF (Get da WATTAH!)";
 								LED4_state = 0;
 							}
 
 							//ZONE TEST DEBUG
-							if (this.responseXML.getElementsByTagName('ZONE')[1].childNodes[0].nodeValue === "on") {
-								document.getElementById("ZONE4").innerHTML = "ZONE 4 is ON (D9)";
+							if (this.responseXML.getElementsByTagName('LED')[1].childNodes[0].nodeValue === "on") {
+								document.getElementById("ZONE4").innerHTML = "ZONE 4 is ON";
 								ZONE4_state = 1;
 							}
 							else {
-								document.getElementById("ZONE4").innerHTML = "ZONE 4 is OFF (D9)";
+								document.getElementById("ZONE4").innerHTML = "ZONE 4 is OFF";
 								ZONE4_state = 0;
 							}
 
 							//ZONETEST2
-							if (this.responseXML.getElementsByTagName('ZONE')[1].childNodes[0].nodeValue === "on") {
-								document.getElementById("ZONE5").innerHTML = "ZONE 5 is ON (D9)";
+							if (this.responseXML.getElementsByTagName('LED')[1].childNodes[0].nodeValue === "on") {
+								document.getElementById("ZONE5").innerHTML = "ZONE 5 is ON";
 								ZONE5_state = 1;
 							}
 							else {
-								document.getElementById("ZONE4").innerHTML = "ZONE 5 is OFF (D9)";
+								document.getElementById("ZONE4").innerHTML = "ZONE 5 is OFF";
 								ZONE5_state = 0;
 							}
 						}
