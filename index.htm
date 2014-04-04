@@ -95,7 +95,7 @@
 				}
 			}
 			// send HTTP GET request with LEDs to switch on/off if any
-			request.open("GET", "ajax_inputs" + strLED1 + strLED2 + strLED3 + strLED4 + nocache, true);
+			request.open("GET", "ajax_inputs" + strLED1 + strLED2 + strLED3 + strLED4 + strZONE4 + strZONE5 nocache, true);
 			request.send(null);
 			setTimeout('GetArduinoIO()', 1000);
 			strLED1 = "";
@@ -141,6 +141,30 @@
 			else {
 				LED4_state = 1;
 				strLED4 = "&LED4=1";
+			}
+		}
+		
+		function GetButton3()
+		{
+			if (ZONE4_state === 1) {
+				ZONE4_state = 0;
+				strZONE4 = "&ZONE4=0";
+			}
+			else {
+				ZONE4_state = 1;
+				strZONE4 = "&ZONE4=1";
+			}
+		}
+
+		function GetButton4()
+		{
+			if (ZONE5_state === 1) {
+				ZONE5_state = 0;
+				strZONE5 = "&strZONE5=0";
+			}
+			else {
+				ZONE5_state = 1;
+				strZONE5 = "&strZONE5=1";
 			}
 		}
 	</script>
@@ -203,9 +227,12 @@
 			<h2>LEDs Using Buttons</h2>
 			<button type="button" id="LED3" onclick="GetButton1()">LED 3 is OFF (D8)</button><br /><br />
 			<button type="button" id="LED4" onclick="GetButton2()">LED 4 is OFF (D9)</button><br /><br />
-			<button type="button" id="ZONE4" onclick="GetButton3()">Zone 4 is OFF (D9)</button><br /><br />
-			<button type="button" id="ZONE5" onclick="GetButton4()">Zone 4 is OFF (D9)</button><br /><br />
 			<p class="small_text">D10 to D13 used by Ethernet shield</p>
+		</div>
+		<div class="IO_box">
+			<h2>Zone Control</h2>
+			<button type="button" id="ZONE4" onclick="GetButton3()">Zone 4 is OFF</button><br /><br />
+			<button type="button" id="ZONE5" onclick="GetButton4()">Zone 5 is OFF</button><br /><br />
 		</div>
     </body>
 </html>
