@@ -67,12 +67,12 @@
 								LED4_state = 1;
 							}
 							else {
-								document.getElementById("LED4").innerHTML = "LED 4 is OFF (Get da WATTAH!)";
+								document.getElementById("LED4").innerHTML = "LED 4 is OFF";
 								LED4_state = 0;
 							}
 
 							//ZONE TEST DEBUG
-							if (this.responseXML.getElementsByTagName('LED')[1].childNodes[0].nodeValue === "on") {
+							if (this.responseXML.getElementsByTagName('ZONE')[0].childNodes[0].nodeValue === "on") {
 								document.getElementById("ZONE4").innerHTML = "ZONE 4 is ON";
 								ZONE4_state = 1;
 							}
@@ -82,7 +82,7 @@
 							}
 
 							//ZONETEST2
-							if (this.responseXML.getElementsByTagName('LED')[1].childNodes[0].nodeValue === "on") {
+							if (this.responseXML.getElementsByTagName('ZONE')[1].childNodes[0].nodeValue === "on") {
 								document.getElementById("ZONE5").innerHTML = "ZONE 5 is ON";
 								ZONE5_state = 1;
 							}
