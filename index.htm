@@ -9,6 +9,11 @@
 		strLED4 = "";
 		var LED3_state = 0;
 		var LED4_state = 0;
+
+		strZONE4 = "";
+		strZONE5 = "";
+		var ZONE4_state = 0;
+		var ZONE5_state = 0;
 		function GetArduinoIO()
 		{
 			nocache = "&nocache=" + Math.random() * 1000000;
@@ -64,6 +69,26 @@
 								document.getElementById("LED4").innerHTML = "LED 4 is OFF (D9)";
 								LED4_state = 0;
 							}
+
+							//ZONE TEST DEBUG
+							if (this.responseXML.getElementsByTagName('ZONE')[1].childNodes[0].nodeValue === "on") {
+								document.getElementById("ZONE4").innerHTML = "ZONE 4 is ON (D9)";
+								ZONE4_state = 1;
+							}
+							else {
+								document.getElementById("ZONE4").innerHTML = "ZONE 4 is OFF (D9)";
+								ZONE4_state = 0;
+							}
+
+							//ZONETEST2
+							if (this.responseXML.getElementsByTagName('ZONE')[1].childNodes[0].nodeValue === "on") {
+								document.getElementById("ZONE5").innerHTML = "ZONE 5 is ON (D9)";
+								ZONE5_state = 1;
+							}
+							else {
+								document.getElementById("ZONE4").innerHTML = "ZONE 5 is OFF (D9)";
+								ZONE5_state = 0;
+							}
 						}
 					}
 				}
@@ -76,6 +101,8 @@
 			strLED2 = "";
 			strLED3 = "";
 			strLED4 = "";
+			strZONE4 = "";
+			strZONE5 = "";
 		}
 		// service LEDs when checkbox checked/unchecked
 		function GetCheck()
@@ -175,6 +202,8 @@
 			<h2>LEDs Using Buttons</h2>
 			<button type="button" id="LED3" onclick="GetButton1()">LED 3 is OFF (D8)</button><br /><br />
 			<button type="button" id="LED4" onclick="GetButton2()">LED 4 is OFF (D9)</button><br /><br />
+			<button type="button" id="ZONE4" onclick="GetButton3()">Zone 4 is OFF (D9)</button><br /><br />
+			<button type="button" id="ZONE5" onclick="GetButton4()">Zone 4 is OFF (D9)</button><br /><br />
 			<p class="small_text">D10 to D13 used by Ethernet shield</p>
 		</div>
     </body>
