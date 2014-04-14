@@ -1,36 +1,9 @@
 /*--------------------------------------------------------------
-  Program:      eth_websrv_SD_Ajax_in_out
 
-  Description:  Arduino web server that displays 4 analog inputs,
-                the state of 3 switches and controls 4 outputs,
-                2 using checkboxes and 2 using buttons.
-                The web page is stored on the micro SD card.
-  
-  Hardware:     Arduino Uno and official Arduino Ethernet
-                shield. Should work with other Arduinos and
-                compatible Ethernet shields.
-                2Gb micro SD card formatted FAT16.
-                A2 to A4 analog inputs, pins 2, 3 and 5 for
-                the switches, pins 6 to 9 as outputs (LEDs).
-                
-  Software:     Developed using Arduino 1.0.5 software
-                Should be compatible with Arduino 1.0 +
-                SD card contains web page called index.htm
-  
-  References:   - WebServer example by David A. Mellis and 
-                  modified by Tom Igoe
-                - SD card examples by David A. Mellis and
-                  Tom Igoe
-                - Ethernet library documentation:
-                  http://arduino.cc/en/Reference/Ethernet
-                - SD Card library documentation:
-                  http://arduino.cc/en/Reference/SD
+Webserver for ISU Senior Design - Ames High Greenhouse System
 
-  Date:         4 April 2013
-  Modified:     19 June 2013
-                - removed use of the String class
- 
-  Author:       W.A. Smith, http://startingelectronics.com
+This code will be built using the Arduino compiler and operates
+with an Ethernet shield using the WizNet chipset.
 --------------------------------------------------------------*/
 
 #include <SPI.h>
@@ -50,6 +23,7 @@ File webFile;               // the web page file on the SD card
 char HTTP_req[REQ_BUF_SZ] = {0}; // buffered HTTP request stored as null terminated string
 char req_index = 0;              // index into HTTP_req buffer
 boolean LED_state[4] = {0}; // stores the states of the LEDs
+//String config_array[NUM_ZONES][NUM_PROPS]; //stores values from website
 
 void setup()
 {

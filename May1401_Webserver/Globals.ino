@@ -1,6 +1,7 @@
 
 /*
  Define global variables here to be used in all other files
+ 
 */
 
 #ifndef NUM_ZONES
@@ -13,7 +14,7 @@
 
 typedef struct 
 {
-char Name[9]; 
+char Name[19]; 
 char Visible; 
 char Time1[6]; 
 int  Dur1;
