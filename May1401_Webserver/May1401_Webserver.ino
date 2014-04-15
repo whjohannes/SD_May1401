@@ -9,7 +9,7 @@ with an Ethernet shield using the WizNet chipset.
 #include <SPI.h>
 #include <Ethernet.h>
 #include <SD.h>
-#include <Globals.ino>
+//#include <Globals.ino>
 #include <config_parser.ino>
 
 // size of buffer used to capture HTTP requests
@@ -28,13 +28,31 @@ boolean LED_state[4] = {0}; // stores the states of the LEDs
 boolean ZoneState[NUM_ZONES] = {0}; //stores zone active states
 String config_array[NUM_ZONES][NUM_PROPS]; //stores values from website
 
+typedef struct 
+{
+String Name; 
+int Visible; 
+String Time1; 
+int  Dur1;
+String Time2; 
+int  Dur2;
+String Time3; 
+int  Dur3;
+String Time4; 
+int  Dur4;
+} zone_properties;
+
+
+//Define all zone scructs
+zone_properties zone[NUM_ZONES];
+
 void setup()
 {
     // disable Ethernet chip
     pinMode(10, OUTPUT);
     digitalWrite(10, HIGH);
     
-    Serial.begin(9600);       // for debugging
+    Serial.begin(115200);       // for debugging
     
     // initialize SD card
     Serial.println("Initializing SD card...");
@@ -57,16 +75,26 @@ void setup()
     Serial.println("SUCCESS - Found index.htm file.");
     Serial.println("SUCCESS - Found config.h Parsing now...");
     split_config(config_array);
+   
+    for(int i = 0; i<NUM_ZONES;i++)
+        for(int j=0;j<NUM_PROPS;j++)
+    Serial.println(config_array[i][j]);
 
-    // switches on pins 2, 3 and 5
-    pinMode(2, INPUT);
-    pinMode(3, INPUT);
-    pinMode(5, INPUT);
-    // LEDs
-    pinMode(6, OUTPUT);
-    pinMode(7, OUTPUT);
-    pinMode(8, OUTPUT);
-    pinMode(9, OUTPUT);
+    for(int i=0; i<NUM_ZONES;i++)
+    {
+        zone[i].Name = config_array[i][0];
+        zone[i].Visible = config_array[i][1].toInt();
+        zone[i].Time1 = config_array[i][2];
+        zone[i].Dur1 = config_array[i][3].toInt();
+        zone[i].Time2 = config_array[i][4];
+        zone[i].Dur2 = config_array[i][5].toInt();
+        zone[i].Time3 = config_array[i][6];
+        zone[i].Dur3 = config_array[i][7].toInt();
+        zone[i].Time4 = config_array[i][8];
+        zone[i].Dur4 = config_array[i][9].toInt();
+    }
+
+    //TODO: CONFIGURE IO
     
     Ethernet.begin(mac, ip);  // initialize Ethernet device
     server.begin();           // start to listen for clients
@@ -101,7 +129,7 @@ void loop()
                         client.println("Content-Type: text/xml");
                         client.println("Connection: keep-alive");
                         client.println();
-                        SetLEDs();
+                        Zone_States();
                         // send XML file containing input states
                         XML_response(client);
                     }
@@ -143,7 +171,7 @@ void loop()
     } // end if (client)
 }
 
-void ZoneState(void)
+void Zone_States(void)
 {
     if (StrContains(HTTP_req, "Zone1=1")) 
     {
@@ -152,7 +180,7 @@ void ZoneState(void)
     }
     else if (StrContains(HTTP_req, "Zone1=0")) 
     {
-        LED_state[0] = 0;  // save zone1 state
+        ZoneState[0] = 0;  // save zone1 state
         digitalWrite(6, LOW); //TODO: define pin 
     }
 
@@ -163,7 +191,7 @@ void ZoneState(void)
     }
     else if (StrContains(HTTP_req, "Zone2=0")) 
     {
-        LED_state[1] = 0;  // save zone2 state
+        ZoneState[1] = 0;  // save zone2 state
         digitalWrite(6, LOW); //TODO: define pin 
     }
     
@@ -174,7 +202,7 @@ void ZoneState(void)
     }
     else if (StrContains(HTTP_req, "Zone3=0")) 
     {
-        LED_state[2] = 0;  // save zone3 state
+        ZoneState[2] = 0;  // save zone3 state
         digitalWrite(6, LOW); //TODO: define pin 
     }
 
@@ -185,64 +213,140 @@ void ZoneState(void)
     }
     else if (StrContains(HTTP_req, "Zone4=0")) 
     {
-        LED_state[3] = 0;  // save zone4 state
+        ZoneState[3] = 0;  // save zone4 state
         digitalWrite(6, LOW); //TODO: define pin 
     }
     
     if (StrContains(HTTP_req, "Zone5=1")) 
-    
+    {
         ZoneState[4] = 1;  // save zone state
         digitalWrite(6, HIGH); //TODO: define pin 
     }
     else if (StrContains(HTTP_req, "Zone5=0")) 
     {
-        LED_state[4] = 0;  // save zone state
+        ZoneState[4] = 0;  // save zone state
         digitalWrite(6, LOW); //TODO: define pin 
     }
 
-}
+    if (StrContains(HTTP_req, "Zone6=1")) 
+    {
+        ZoneState[5] = 1;  // save zone state
+        digitalWrite(6, HIGH); //TODO: define pin 
+    }
+    else if (StrContains(HTTP_req, "Zone6=0")) 
+    {
+        ZoneState[5] = 0;  // save zone state
+        digitalWrite(6, LOW); //TODO: define pin 
+    }
 
+    if (StrContains(HTTP_req, "Zone7=1")) 
+    {
+        ZoneState[6] = 1;  // save zone state
+        digitalWrite(6, HIGH); //TODO: define pin 
+    }
+    else if (StrContains(HTTP_req, "Zone7=0")) 
+    {
+        ZoneState[6] = 0;  // save zone state
+        digitalWrite(6, LOW); //TODO: define pin 
+    }
 
+    if (StrContains(HTTP_req, "Zone8=1")) 
+    {
+        ZoneState[7] = 1;  // save zone state
+        digitalWrite(6, HIGH); //TODO: define pin 
+    }
+    else if (StrContains(HTTP_req, "Zone8=0")) 
+    {
+        ZoneState[7] = 0;  // save zone state
+        digitalWrite(6, LOW); //TODO: define pin 
+    }
 
-// checks if received HTTP request is switching on/off LEDs
-// also saves the state of the LEDs
-void SetLEDs(void)
-{
-    // LED 1 (pin 6)
-    if (StrContains(HTTP_req, "LED1=1")) {
-        LED_state[0] = 1;  // save LED state
-        digitalWrite(6, HIGH);
+    if (StrContains(HTTP_req, "Zone9=1")) 
+    {
+        ZoneState[8] = 1;  // save zone state
+        digitalWrite(6, HIGH); //TODO: define pin 
     }
-    else if (StrContains(HTTP_req, "LED1=0")) {
-        LED_state[0] = 0;  // save LED state
-        digitalWrite(6, LOW);
+    else if (StrContains(HTTP_req, "Zone9=0")) 
+    {
+        ZoneState[8] = 0;  // save zone state
+        digitalWrite(6, LOW); //TODO: define pin 
     }
-    // LED 2 (pin 7)
-    if (StrContains(HTTP_req, "LED2=1")) {
-        LED_state[1] = 1;  // save LED state
-        digitalWrite(7, HIGH);
+
+    if (StrContains(HTTP_req, "Zone10=1")) 
+    {
+        ZoneState[9] = 1;  // save zone state
+        digitalWrite(6, HIGH); //TODO: define pin 
     }
-    else if (StrContains(HTTP_req, "LED2=0")) {
-        LED_state[1] = 0;  // save LED state
-        digitalWrite(7, LOW);
+    else if (StrContains(HTTP_req, "Zone10=0")) 
+    {
+        ZoneState[9] = 0;  // save zone state
+        digitalWrite(6, LOW); //TODO: define pin 
     }
-    // LED 3 (pin 8)
-    if (StrContains(HTTP_req, "LED3=1")) {
-        LED_state[2] = 1;  // save LED state
-        digitalWrite(8, HIGH);
+
+    if (StrContains(HTTP_req, "Zone11=1")) 
+    {
+        ZoneState[10] = 1;  // save zone state
+        digitalWrite(6, HIGH); //TODO: define pin 
     }
-    else if (StrContains(HTTP_req, "LED3=0")) {
-        LED_state[2] = 0;  // save LED state
-        digitalWrite(8, LOW);
+    else if (StrContains(HTTP_req, "Zone11=0")) 
+    {
+        ZoneState[10] = 0;  // save zone state
+        digitalWrite(6, LOW); //TODO: define pin 
     }
-    // LED 4 (pin 9)
-    if (StrContains(HTTP_req, "LED4=1")) {
-        LED_state[3] = 1;  // save LED state
-        digitalWrite(9, HIGH);
+
+    if (StrContains(HTTP_req, "Zone12=1")) 
+    {
+        ZoneState[11] = 1;  // save zone state
+        digitalWrite(6, HIGH); //TODO: define pin 
     }
-    else if (StrContains(HTTP_req, "LED4=0")) {
-        LED_state[3] = 0;  // save LED state
-        digitalWrite(9, LOW);
+    else if (StrContains(HTTP_req, "Zone12=0")) 
+    {
+        ZoneState[11] = 0;  // save zone state
+        digitalWrite(6, LOW); //TODO: define pin 
+    }
+
+    if (StrContains(HTTP_req, "Zone13=1")) 
+    {
+        ZoneState[12] = 1;  // save zone state
+        digitalWrite(6, HIGH); //TODO: define pin 
+    }
+    else if (StrContains(HTTP_req, "Zone13=0")) 
+    {
+        ZoneState[12] = 0;  // save zone state
+        digitalWrite(6, LOW); //TODO: define pin 
+    }
+
+    if (StrContains(HTTP_req, "Zone14=1")) 
+    {
+        ZoneState[13] = 1;  // save zone state
+        digitalWrite(6, HIGH); //TODO: define pin 
+    }
+    else if (StrContains(HTTP_req, "Zone14=0")) 
+    {
+        ZoneState[13] = 0;  // save zone state
+        digitalWrite(6, LOW); //TODO: define pin 
+    }
+
+    if (StrContains(HTTP_req, "Zone15=1")) 
+    {
+        ZoneState[14] = 1;  // save zone state
+        digitalWrite(6, HIGH); //TODO: define pin 
+    }
+    else if (StrContains(HTTP_req, "Zone15=0")) 
+    {
+        ZoneState[14] = 0;  // save zone state
+        digitalWrite(6, LOW); //TODO: define pin 
+    }
+
+    if (StrContains(HTTP_req, "Zone16=1")) 
+    {
+        ZoneState[15] = 1;  // save zone state
+        digitalWrite(6, HIGH); //TODO: define pin 
+    }
+    else if (StrContains(HTTP_req, "Zone16=0")) 
+    {
+        ZoneState[15] = 0;  // save zone state
+        digitalWrite(6, LOW); //TODO: define pin 
     }
 }
 

@@ -18,20 +18,20 @@ int split_config(String config_array[][NUM_PROPS])
     	{
     		config_file_string.concat( (char) config_file.read());
     	}
-    	Serial.println(config_file_string);
-    	Serial.println("TP1");
+    //	Serial.println(config_file_string);
+    //	Serial.println("TP1");
 		for(int i = 0; i < NUM_ZONES; i++)
 		{
 
 			for(int j = 0; j < NUM_PROPS; j++)
 			{
 				comma_position = config_file_string.indexOf(',');
-				Serial.print("comma pos ");
-				Serial.println(comma_position);
+			//	Serial.print("comma pos ");
+			//	Serial.println(comma_position);
 
 				if(comma_position != -1)
 				{
-      				Serial.println( config_file_string.substring(0,comma_position));
+      		//		Serial.println( config_file_string.substring(0,comma_position));
       				config_array[i][j] = config_file_string.substring(0,comma_position);
       				config_file_string = config_file_string.substring(comma_position+1, config_file_string.length());
 				}
