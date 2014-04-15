@@ -4,13 +4,13 @@
 #include <string.h>
 
 String config_file_string;
-String config_array[NUM_ZONES][NUM_PROPS]; //Name, Visible, Time1, Dur1, Time2, Dur2, Time3, Dur3, Time4, Dur4
+//String config_array[NUM_ZONES][NUM_PROPS]; //Name, Visible, Time1, Dur1, Time2, Dur2, Time3, Dur3, Time4, Dur4
 File config_file;
 int comma_position;
 char temp_char;
 
 
-String ** split_config()
+int split_config(String config_array[][NUM_PROPS])
 {
 	config_file = SD.open("config.h");        // open web page file
     if (config_file) {
@@ -38,7 +38,7 @@ String ** split_config()
 		
 			}
 		}
-	//return config_array;
+	 return 1;
 	}
 	else
 	{
