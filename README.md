@@ -6,7 +6,5 @@ Current State:
  - Navigation between pages
  
 TODO:
- - Create config.txt to store current values for zones on startup
- - Develop parser for config.txt
  - Build structure between IOs for XML requests
  
