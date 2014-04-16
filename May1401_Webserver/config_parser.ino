@@ -23,7 +23,7 @@ int split_config(String config_array[][NUM_PROPS])
 		for(int i = 0; i < NUM_ZONES; i++)
 		{
 
-			for(int j = 0; j < NUM_PROPS; j++)
+			for(int j = 0; j < NUM_PROPS+1; j++)
 			{
 				comma_position = config_file_string.indexOf(',');
 			//	Serial.print("comma pos ");
