@@ -14,3 +14,12 @@ TODO:
  - Implement and test LCD display functionality
  - Share variables and arrays between LCD library and website control 
  
+HOW TO USE
+ - Load website files onto SD card
+ - Open webserver code in Arduino 
+ -   Modify IP address to suit network
+ - Upload to Arduino with ethernet shield installed
+ - Visit assigned IP address (~10 second load)
+ - Navigate to "Config > Setup Zones" to choose which zones to make visible and name specific zones
+ - Assign start times and durations to each zone
+ - Verify IO pinout with relays
