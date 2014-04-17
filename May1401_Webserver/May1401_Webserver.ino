@@ -16,10 +16,11 @@ with an Ethernet shield using the WizNet chipset.
 #define REQ_BUF_SZ   60
 #define NUM_ZONES 16
 #define NUM_PROPS 9
+#define BUFFER_SIZE 64
 
 // MAC address from Ethernet shield sticker under board
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-IPAddress ip(192, 168, 1, 177); // IP address, may need to change depending on network
+IPAddress ip(192, 168, 8, 177); // IP address, may need to change depending on network
 EthernetServer server(80);  // create a server at port 80
 File webFile;               // the web page file on the SD card
 char HTTP_req[REQ_BUF_SZ] = {0}; // buffered HTTP request stored as null terminated string
@@ -27,6 +28,8 @@ char req_index = 0;              // index into HTTP_req buffer
 boolean LED_state[4] = {0}; // stores the states of the LEDs
 boolean ZoneState[NUM_ZONES] = {0}; //stores zone active states
 String config_array[NUM_ZONES][NUM_PROPS]; //stores values from website
+int count = 0; //for buffering packet
+byte httpBuffer[BUFFER_SIZE];
 
 typedef struct 
 {
@@ -141,7 +144,15 @@ void loop()
                         webFile = SD.open("index.htm");        // open web page file
                         if (webFile) {
                             while(webFile.available()) {
-                                client.write(webFile.read()); // send web page to client
+                                for(int i = 0; i<BUFFER_SIZE; i++)
+                                httpBuffer[i] = 0;
+
+                                for(count = 0; count <BUFFER_SIZE; count++)
+                                {
+                                    httpBuffer[count] = webFile.read();
+                                }
+                                client.write( (byte*) httpBuffer, BUFFER_SIZE); // send web page to client
+                            
                             }
                             webFile.close();
                         }
