@@ -9,7 +9,7 @@ with an Ethernet shield using the WizNet chipset.
 #include <SPI.h>
 #include <Ethernet.h>
 #include <SD.h>
-//#include <Globals.ino>
+#include "Globals.h"
 #include <config_parser.ino>
 
 // size of buffer used to capture HTTP requests
@@ -20,30 +20,32 @@ with an Ethernet shield using the WizNet chipset.
 
 // MAC address from Ethernet shield sticker under board
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-IPAddress ip(192, 168, 8, 177); // IP address, may need to change depending on network
+IPAddress ip(192, 168, 1, 177); // IP address, may need to change depending on network
 EthernetServer server(80);  // create a server at port 80
 File webFile;               // the web page file on the SD card
 char HTTP_req[REQ_BUF_SZ] = {0}; // buffered HTTP request stored as null terminated string
 char req_index = 0;              // index into HTTP_req buffer
 boolean LED_state[4] = {0}; // stores the states of the LEDs
-boolean ZoneState[NUM_ZONES] = {0}; //stores zone active states
+int ZoneState[NUM_ZONES] = {0}; //stores zone active states
 String config_array[NUM_ZONES][NUM_PROPS]; //stores values from website
 int count = 0; //for buffering packet
 byte httpBuffer[BUFFER_SIZE];
 
-typedef struct 
-{
-String Name; 
-int Visible; 
-String Time1; 
-int  Dur1;
-String Time2; 
-int  Dur2;
-String Time3; 
-int  Dur3;
-String Time4; 
-int  Dur4;
-} zone_properties;
+int write_to_sd(zone_properties zone[NUM_ZONES]);
+
+// typedef struct 
+// {
+// String Name; 
+// int Visible; 
+// String Time1; 
+// int  duration1;
+// String Time2; 
+// int  duration2;
+// String Time3; 
+// int  duration3;
+// String Time4; 
+// int  duration4;
+// } zone_properties;
 
 
 //Define all zone scructs
@@ -84,17 +86,19 @@ void setup()
         zone[i].Name = config_array[i][0];
         zone[i].Visible = config_array[i][1].toInt();
         zone[i].Time1 = config_array[i][2];
-        zone[i].Dur1 = config_array[i][3].toInt();
+        zone[i].duration1 = config_array[i][3].toInt();
         zone[i].Time2 = config_array[i][4];
-        zone[i].Dur2 = config_array[i][5].toInt();
+        zone[i].duration2 = config_array[i][5].toInt();
         zone[i].Time3 = config_array[i][6];
-        zone[i].Dur3 = config_array[i][7].toInt();
+        zone[i].duration3 = config_array[i][7].toInt();
         zone[i].Time4 = config_array[i][8];
-        zone[i].Dur4 = config_array[i][9].toInt();
+        zone[i].duration4 = config_array[i][9].toInt();
 
     }
 
     Serial.println("Parse -> Struct: Complete.");
+
+    write_to_sd(&zone[NUM_ZONES]);
 
 
     
@@ -158,7 +162,7 @@ void loop()
                         }
                     }
                     // display received HTTP request on serial port
-                    Serial.print(HTTP_req);
+                    Serial.println(HTTP_req);
                     // reset buffer index and all buffer elements to 0
                     req_index = 0;
                     StrClear(HTTP_req, REQ_BUF_SZ);
@@ -183,16 +187,22 @@ void loop()
 
 void Zone_States(void)
 {
-    if (StrContains(HTTP_req, "Zone1=1")) 
+    if (StrContains(HTTP_req, "Zone1=on")) 
     {
         ZoneState[0] = 1;  // save zone1 state
         digitalWrite(6, HIGH); //TODO: define pin 
     }
-    else if (StrContains(HTTP_req, "Zone1=0")) 
+    else if (StrContains(HTTP_req, "Zone1=off")) 
     {
         ZoneState[0] = 0;  // save zone1 state
         digitalWrite(6, LOW); //TODO: define pin 
     }
+    else if (StrContains(HTTP_req, "Zone1=auto")) 
+    {
+        ZoneState[0] = 0;  // save zone1 state
+        digitalWrite(6, LOW); //TODO: define pin 
+    }
+
 
     if (StrContains(HTTP_req, "Zone2=1")) 
     {
@@ -382,33 +392,33 @@ void XML_response(EthernetClient cl)
         cl.print(zone[i].Time1);
         cl.print("</time1>");
  
-        cl.print("<dur1>");
-        cl.print(zone[i].Dur1);
-        cl.print("</dur1>");
+        cl.print("<duration1>");
+        cl.print(zone[i].duration1);
+        cl.print("</duration1>");
 
         cl.print("<time2>");
         cl.print(zone[i].Time2);
         cl.print("</time2>");
 
-        cl.print("<dur2>");
-        cl.print(zone[i].Dur2);
-        cl.print("</dur2>");
+        cl.print("<duration2>");
+        cl.print(zone[i].duration2);
+        cl.print("</duration2>");
 
         cl.print("<time3>");
         cl.print(zone[i].Time3);
         cl.print("</time3>");
 
-        cl.print("<dur3>");
-        cl.print(zone[i].Dur3);
-        cl.print("</dur3>");
+        cl.print("<duration3>");
+        cl.print(zone[i].duration3);
+        cl.print("</duration3>");
 
         cl.print("<time4>");
         cl.print(zone[i].Time4);
         cl.print("</time4>");
 
-        cl.print("<dur4>");
-        cl.print(zone[i].Dur4);
-        cl.print("</dur4>");
+        cl.print("<duration4>");
+        cl.print(zone[i].duration4);
+        cl.print("</duration4>");
 
 
     }
@@ -453,3 +463,6 @@ char StrContains(char *str, char *sfind)
 
     return 0;
 }
+
+
+  

@@ -1,4 +1,4 @@
-#include <Globals.ino>
+#include <Globals.h>
 #include <stdio.h>
 #include <SD.h>
 #include <string.h>
@@ -9,8 +9,7 @@ File config_file;
 int comma_position;
 char temp_char;
 
-
-int split_config(String config_array[][NUM_PROPS])
+int split_config(String config_array[NUM_ZONES][NUM_PROPS])
 {
 	config_file = SD.open("config.h");        // open web page file
     if (config_file) {
@@ -31,7 +30,7 @@ int split_config(String config_array[][NUM_PROPS])
 
 				if(comma_position != -1)
 				{
-      		//		Serial.println( config_file_string.substring(0,comma_position));
+      				//Serial.println( config_file_string.substring(0,comma_position));
       				config_array[i][j] = config_file_string.substring(0,comma_position);
       				config_file_string = config_file_string.substring(comma_position+1, config_file_string.length());
 				}
@@ -45,3 +44,22 @@ int split_config(String config_array[][NUM_PROPS])
 		return 0;
 	}
 }
+
+int write_to_sd(zone_properties zone[NUM_ZONES])
+{
+	config_file = SD.open("config.h");        // open web page file
+
+    if (config_file)
+    {
+       // while(config_file.available())
+        {
+            for(int i = 0; i < NUM_ZONES; i++)
+            {
+                Serial.println(zone[i].Name);
+            }
+        }
+    }
+    return 1;
+}
+
+ 
