@@ -36,6 +36,7 @@ int split_config(String config_array[NUM_ZONES][NUM_PROPS])
 		
 			}
 		}
+	config_file.close();
 	 return 1;
 	}
 	else

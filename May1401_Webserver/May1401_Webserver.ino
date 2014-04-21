@@ -20,7 +20,7 @@ with an Ethernet shield using the WizNet chipset.
 
 // MAC address from Ethernet shield sticker under board
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-IPAddress ip(192, 168, 1, 177); // IP address, may need to change depending on network
+IPAddress ip(192, 168, 8, 177); // IP address, may need to change depending on network
 EthernetServer server(80);  // create a server at port 80
 File webFile;               // the web page file on the SD card
 char HTTP_req[REQ_BUF_SZ] = {0}; // buffered HTTP request stored as null terminated string
@@ -56,7 +56,7 @@ void setup()
     pinMode(10, OUTPUT);
     digitalWrite(10, HIGH);
     
-    Serial.begin(115200);       // for debugging
+    Serial.begin(19200);       // for debugging
     
     // initialize SD card
     Serial.println("Initializing SD card...");
@@ -84,66 +84,18 @@ void setup()
     {
         zone[i].Name = config_array[i][0];
         zone[i].Visible = config_array[i][1].toInt();
-        zone[i].Time1 = (String) config_array[i][2];
+        zone[i].Time1 = config_array[i][2];
         zone[i].duration1 = config_array[i][3].toInt();
-        zone[i].Time2 = (String) config_array[i][4];
+        zone[i].Time2 = config_array[i][4];
         zone[i].duration2 = config_array[i][5].toInt();
-        zone[i].Time3 = (String) config_array[i][6];
+        zone[i].Time3 = config_array[i][6];
         zone[i].duration3 = config_array[i][7].toInt();
-        zone[i].Time4 = (String) config_array[i][8];
+        zone[i].Time4 = config_array[i][8];
         zone[i].duration4 = config_array[i][9].toInt();
 
     }
 
     Serial.println("Parse -> Struct: Complete.");
-
-    for(int i = 0; i<NUM_ZONES; i++)
-    {
-        Serial.println((String) zone[i].Name);
-    }
-
-    //WRITE SD_CARD
-    while(SD.exists("config.h"))
-    {
-        Serial.println("removing previous config");
-        SD.remove("config.h");
-    }
-    return_file = SD.open("config.h", FILE_WRITE);        // open web page file
-        if (return_file) 
-        {
-            for(int i = 0; i<NUM_ZONES; i++)
-            {
-                return_file.print(zone[i].Name);
-                return_file.print(",");
-                return_file.print(zone[i].Visible);
-                return_file.print(",");
-                return_file.print(zone[i].Time1);
-                return_file.print(",");
-                return_file.print(zone[i].duration1);
-                return_file.print(",");
-                return_file.print(zone[i].Time2);
-                return_file.print(",");
-                return_file.print(zone[i].duration2);
-                return_file.print(",");
-                return_file.print(zone[i].Time3);
-                return_file.print(",");
-                return_file.print(zone[i].duration3);
-                return_file.print(",");
-                return_file.print(zone[i].Time4);
-                return_file.print(",");
-                return_file.print(zone[i].duration4);
-                return_file.print(",");
-                Serial.println(zone[i].Name);
-            }
-            
-            Serial.println("Finished Writing to SD");
-            return_file.close();
-        }
-        else
-        {
-            Serial.println("Couldn't write to config.h");
-        }
-
     
     Ethernet.begin(mac, ip);  // initialize Ethernet device
     server.begin();           // start to listen for clients
@@ -411,6 +363,52 @@ void Zone_States(void)
         ZoneState[15] = 0;  // save zone state
         digitalWrite(6, LOW); //TODO: define pin 
     }
+
+    if (StrContains(HTTP_req, "UPDATE ZONES"))
+    {
+            //WRITE SD_CARD
+        while(SD.exists("config.h"))
+        {
+            Serial.println("removing previous config");
+            SD.remove("config.h");
+        }
+        return_file = SD.open("config.h", FILE_WRITE);        // open web page file
+            if (return_file) 
+            {
+                for(int i = 0; i<NUM_ZONES; i++)
+                {
+                    return_file.print( (String) zone[i].Name);
+                    return_file.print(",");
+                    return_file.print(zone[i].Visible);
+                    return_file.print(",");
+                    return_file.print(zone[i].Time1);
+                    return_file.print(",");
+                    return_file.print(zone[i].duration1);
+                    return_file.print(",");
+                    return_file.print(zone[i].Time2);
+                    return_file.print(",");
+                    return_file.print(zone[i].duration2);
+                    return_file.print(",");
+                    return_file.print(zone[i].Time3);
+                    return_file.print(",");
+                    return_file.print(zone[i].duration3);
+                    return_file.print(",");
+                    return_file.print(zone[i].Time4);
+                    return_file.print(",");
+                    return_file.print(zone[i].duration4);
+                    return_file.print(",");
+                    Serial.println(zone[i].Name);
+                }
+            
+                Serial.println("Finished Writing to SD");
+                return_file.close();
+            }
+            else
+            {
+                Serial.println("Couldn't write to config.h");
+            }
+        //END WRITE SD CARD
+        }
 }
 
 // send the XML file with analog values, switch status
