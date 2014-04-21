@@ -45,21 +45,4 @@ int split_config(String config_array[NUM_ZONES][NUM_PROPS])
 	}
 }
 
-int write_to_sd(zone_properties zone[NUM_ZONES])
-{
-	config_file = SD.open("config.h");        // open web page file
-
-    if (config_file)
-    {
-       // while(config_file.available())
-        {
-            for(int i = 0; i < NUM_ZONES; i++)
-            {
-                Serial.println(zone[i].Name);
-            }
-        }
-    }
-    return 1;
-}
-
  

@@ -4,7 +4,12 @@
  
 */
 
-typedef struct 
+#ifndef Globals_h
+#define Globals_h
+
+#include <Wstring.h>
+
+typedef struct
 {
 String Name; 
 int Visible; 
@@ -17,3 +22,5 @@ int  duration3;
 String Time4; 
 int  duration4;
 } zone_properties;
+
+#endif

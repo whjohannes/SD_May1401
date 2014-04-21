@@ -31,8 +31,6 @@ String config_array[NUM_ZONES][NUM_PROPS]; //stores values from website
 int count = 0; //for buffering packet
 byte httpBuffer[BUFFER_SIZE];
 
-int write_to_sd(zone_properties zone[NUM_ZONES]);
-
 // typedef struct 
 // {
 // String Name; 
@@ -98,8 +96,14 @@ void setup()
 
     Serial.println("Parse -> Struct: Complete.");
 
-    write_to_sd(&zone[NUM_ZONES]);
 
+    //WRITE SD_CARD
+    config_file = SD.open("config.h");        // open web page file
+        if (config_file) 
+        {
+            for(int i = 0; i<NUM_ZONES; i++)
+            Serial.println(zone[1].Name);
+        }
 
     
     Ethernet.begin(mac, ip);  // initialize Ethernet device
