@@ -30,6 +30,7 @@ int ZoneState[NUM_ZONES] = {0}; //stores zone active states
 String config_array[NUM_ZONES][NUM_PROPS]; //stores values from website
 int count = 0; //for buffering packet
 byte httpBuffer[BUFFER_SIZE];
+File return_file;
 
 // typedef struct 
 // {
@@ -83,26 +84,64 @@ void setup()
     {
         zone[i].Name = config_array[i][0];
         zone[i].Visible = config_array[i][1].toInt();
-        zone[i].Time1 = config_array[i][2];
+        zone[i].Time1 = (String) config_array[i][2];
         zone[i].duration1 = config_array[i][3].toInt();
-        zone[i].Time2 = config_array[i][4];
+        zone[i].Time2 = (String) config_array[i][4];
         zone[i].duration2 = config_array[i][5].toInt();
-        zone[i].Time3 = config_array[i][6];
+        zone[i].Time3 = (String) config_array[i][6];
         zone[i].duration3 = config_array[i][7].toInt();
-        zone[i].Time4 = config_array[i][8];
+        zone[i].Time4 = (String) config_array[i][8];
         zone[i].duration4 = config_array[i][9].toInt();
 
     }
 
     Serial.println("Parse -> Struct: Complete.");
 
+    for(int i = 0; i<NUM_ZONES; i++)
+    {
+        Serial.println((String) zone[i].Name);
+    }
 
     //WRITE SD_CARD
-    config_file = SD.open("config.h");        // open web page file
-        if (config_file) 
+    while(SD.exists("config.h"))
+    {
+        Serial.println("removing previous config");
+        SD.remove("config.h");
+    }
+    return_file = SD.open("config.h", FILE_WRITE);        // open web page file
+        if (return_file) 
         {
             for(int i = 0; i<NUM_ZONES; i++)
-            Serial.println(zone[1].Name);
+            {
+                return_file.print(zone[i].Name);
+                return_file.print(",");
+                return_file.print(zone[i].Visible);
+                return_file.print(",");
+                return_file.print(zone[i].Time1);
+                return_file.print(",");
+                return_file.print(zone[i].duration1);
+                return_file.print(",");
+                return_file.print(zone[i].Time2);
+                return_file.print(",");
+                return_file.print(zone[i].duration2);
+                return_file.print(",");
+                return_file.print(zone[i].Time3);
+                return_file.print(",");
+                return_file.print(zone[i].duration3);
+                return_file.print(",");
+                return_file.print(zone[i].Time4);
+                return_file.print(",");
+                return_file.print(zone[i].duration4);
+                return_file.print(",");
+                Serial.println(zone[i].Name);
+            }
+            
+            Serial.println("Finished Writing to SD");
+            return_file.close();
+        }
+        else
+        {
+            Serial.println("Couldn't write to config.h");
         }
 
     
