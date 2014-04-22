@@ -21,7 +21,6 @@ int split_config(String config_array[NUM_ZONES][NUM_PROPS])
     //	Serial.println("TP1");
 		for(int i = 0; i < NUM_ZONES; i++)
 		{
-
 			for(int j = 0; j < NUM_PROPS+1; j++)
 			{
 				comma_position = config_file_string.indexOf(',');
@@ -37,6 +36,7 @@ int split_config(String config_array[NUM_ZONES][NUM_PROPS])
 		
 			}
 		}
+	config_file.close();
 	 return 1;
 	}
 	else
