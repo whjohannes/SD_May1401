@@ -13,7 +13,7 @@ with an Ethernet shield using the WizNet chipset.
 #include <config_parser.ino>
 
 // size of buffer used to capture HTTP requests
-#define REQ_BUF_SZ   60
+#define REQ_BUF_SZ 60
 #define NUM_ZONES 16
 #define NUM_PROPS 9
 #define BUFFER_SIZE 64
@@ -96,6 +96,54 @@ void setup()
     }
 
     Serial.println("Parse -> Struct: Complete.");
+
+    for(int i = 0; i<NUM_ZONES; i++)
+    {
+        Serial.println((String) zone[i].Time1);
+    }
+
+    //WRITE SD_CARD
+    while(SD.exists("config.h"))
+    {
+        Serial.println("removing previous config");
+        SD.remove("config.h");
+    }
+    return_file = SD.open("config.h", FILE_WRITE);        // open web page file
+        if (return_file) 
+        {
+            for(int i = 0; i<NUM_ZONES; i++)
+            {
+                return_file.print( (String) zone[i].Name);
+                return_file.print(",");
+                return_file.print(zone[i].Visible);
+                return_file.print(",");
+                return_file.print(zone[i].Time1);
+                return_file.print(",");
+                return_file.print(zone[i].duration1);
+                return_file.print(",");
+                return_file.print(zone[i].Time2);
+                return_file.print(",");
+                return_file.print(zone[i].duration2);
+                return_file.print(",");
+                return_file.print(zone[i].Time3);
+                return_file.print(",");
+                return_file.print(zone[i].duration3);
+                return_file.print(",");
+                return_file.print(zone[i].Time4);
+                return_file.print(",");
+                return_file.print(zone[i].duration4);
+                return_file.print(",");
+                Serial.println(zone[i].Name);
+            }
+            
+            Serial.println("Finished Writing to SD");
+            return_file.close();
+        }
+        else
+        {
+            Serial.println("Couldn't write to config.h");
+        }
+
     
     Ethernet.begin(mac, ip);  // initialize Ethernet device
     server.begin();           // start to listen for clients
@@ -363,52 +411,6 @@ void Zone_States(void)
         ZoneState[15] = 0;  // save zone state
         digitalWrite(6, LOW); //TODO: define pin 
     }
-
-    if (StrContains(HTTP_req, "UPDATE ZONES"))
-    {
-            //WRITE SD_CARD
-        while(SD.exists("config.h"))
-        {
-            Serial.println("removing previous config");
-            SD.remove("config.h");
-        }
-        return_file = SD.open("config.h", FILE_WRITE);        // open web page file
-            if (return_file) 
-            {
-                for(int i = 0; i<NUM_ZONES; i++)
-                {
-                    return_file.print( (String) zone[i].Name);
-                    return_file.print(",");
-                    return_file.print(zone[i].Visible);
-                    return_file.print(",");
-                    return_file.print(zone[i].Time1);
-                    return_file.print(",");
-                    return_file.print(zone[i].duration1);
-                    return_file.print(",");
-                    return_file.print(zone[i].Time2);
-                    return_file.print(",");
-                    return_file.print(zone[i].duration2);
-                    return_file.print(",");
-                    return_file.print(zone[i].Time3);
-                    return_file.print(",");
-                    return_file.print(zone[i].duration3);
-                    return_file.print(",");
-                    return_file.print(zone[i].Time4);
-                    return_file.print(",");
-                    return_file.print(zone[i].duration4);
-                    return_file.print(",");
-                    Serial.println(zone[i].Name);
-                }
-            
-                Serial.println("Finished Writing to SD");
-                return_file.close();
-            }
-            else
-            {
-                Serial.println("Couldn't write to config.h");
-            }
-        //END WRITE SD CARD
-        }
 }
 
 // send the XML file with analog values, switch status
