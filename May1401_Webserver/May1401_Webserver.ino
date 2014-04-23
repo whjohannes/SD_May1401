@@ -60,8 +60,6 @@ String time = "";
 // int  duration2;
 // String Time3; 
 // int  duration3;
-// String Time4; 
-// int  duration4;
 // } zone_properties;
 
 
@@ -108,8 +106,6 @@ void setup()
         zone[i].duration2 = config_array[i][5].toInt();
         zone[i].Time3 = config_array[i][6];
         zone[i].duration3 = config_array[i][7].toInt();
-        zone[i].Time4 = config_array[i][8];
-        zone[i].duration4 = config_array[i][9].toInt();
 
     }
 
@@ -452,10 +448,6 @@ void Zone_States(void)
         //             return_file.print(",");
         //             return_file.print(zone[i].duration3);
         //             return_file.print(",");
-        //             return_file.print(zone[i].Time4);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].duration4);
-        //             return_file.print(",");
         //             Serial.println(zone[i].Name);
         //         }
             
@@ -530,15 +522,6 @@ void XML_response(EthernetClient cl)
         cl.print("<duration3>");
         cl.print(zone[i].duration3);
         cl.print("</duration3>");
-
-        cl.print("<time4>");
-        cl.print(zone[i].Time4);
-        cl.print("</time4>");
-
-        cl.print("<duration4>");
-        cl.print(zone[i].duration4);
-        cl.print("</duration4>");
-
 
     }
     
@@ -684,10 +667,6 @@ void water_time(void)
 
             }
             else if (zone[i].Time3.equals(time) && ZoneState[i] == 'A')
-            {
-                
-            }
-            else if (zone[i].Time4.equals(time) && ZoneState[i] == 'A')
             {
                 
             }
