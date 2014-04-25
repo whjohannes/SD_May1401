@@ -16,7 +16,7 @@ with an Ethernet shield using the WizNet chipset.
 // size of buffer used to capture HTTP requests
 #define REQ_BUF_SZ   60
 #define NUM_ZONES 16
-#define NUM_PROPS 9
+#define NUM_PROPS 8
 #define BUFFER_SIZE 64
 
 // MAC address from Ethernet shield sticker under board
@@ -35,7 +35,7 @@ File webFile;               // the web page file on the SD card
 char HTTP_req[REQ_BUF_SZ] = {0}; // buffered HTTP request stored as null terminated string
 int req_index = 0;              // index into HTTP_req buffer
 boolean LED_state[4] = {0}; // stores the states of the LEDs
-char ZoneState[NUM_ZONES] = {0}; //stores zone active states
+char ZoneState[NUM_ZONES] = {'C'}; //stores zone active states
 String config_array[NUM_ZONES][NUM_PROPS]; //stores values from website
 String parsed_GET[10];
 int count = 0; //for buffering packet
@@ -60,8 +60,6 @@ String time = "";
 // int  duration2;
 // String Time3; 
 // int  duration3;
-// String Time4; 
-// int  duration4;
 // } zone_properties;
 
 
@@ -108,8 +106,6 @@ void setup()
         zone[i].duration2 = config_array[i][5].toInt();
         zone[i].Time3 = config_array[i][6];
         zone[i].duration3 = config_array[i][7].toInt();
-        zone[i].Time4 = config_array[i][8];
-        zone[i].duration4 = config_array[i][9].toInt();
 
     }
 
@@ -148,7 +144,7 @@ void loop()
                     // web page or XML page is requested
                     // Ajax request - send XML file
                     char * pch;
-                    pch = strtok (HTTP_req,"&,");
+                    pch = strtok (HTTP_req,"&,  ");
                     int elemountcount=0;
                     while (pch != NULL)
                     {
@@ -156,6 +152,10 @@ void loop()
                         pch = strtok (NULL, "&,");
                         parsed_GET[elemountcount] = pch;
                         elemountcount++;
+                    }
+                    for(int i =0; i<elemountcount; i++)
+                    {
+                        Serial.println(parsed_GET[i]);
                     }
 
                     if (StrContains(HTTP_req, "ajax_inputs")) {
@@ -226,267 +226,675 @@ void loop()
 
 void Zone_States(void)
 {
-    if(parsed_GET[0].equals("config"))
+    if(parsed_GET[0].equals("button")) //EXAMPLE GET REQUEST: "&button,1,A"
     {
-        Serial.println("FUCK YES");
+        // if(parsed_GET[1].toInt() == 1)
+        // {
+        //     Serial.print("parsed_GET[1].toint: ");
+        //     Serial.println(parsed_GET[1].toInt());
+        // }
+        switch(parsed_GET[1].toInt())
+        {
+            //ZONE 1
+            case 1:         
+                if(parsed_GET[2].charAt(0) == 'O')
+                {
+                    if(ZoneState[0] == 'O')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[0] = 'O';
+                        digitalWrite(ZONE1_PIN_OUT,OPEN);
+                        break;
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'C')
+                {
+                    if(ZoneState[0] == 'C')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[0] = 'C';
+                        digitalWrite(ZONE1_PIN_OUT,CLOSE);
+
+
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'A')
+                {
+                    ZoneState[0] = 'A';
+
+                }
+            break;
+
+            //ZONE 2
+            case 2:
+            if(parsed_GET[2].charAt(0) == 'O')
+                {
+                    if(ZoneState[1] == 'O')
+                    {
+                        break;
+                    }                    
+                    else
+                    {
+                        ZoneState[1] = 'O';
+                        digitalWrite(ZONE2_PIN_OUT,OPEN);                        
+                        break;
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'C')
+                {
+                    if(ZoneState[1] == 'C')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[1] = 'C';                        
+                        digitalWrite(ZONE2_PIN_OUT,CLOSE);                        
+
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'A')
+                {
+                    ZoneState[1] = 'A';
+                }
+
+            break;
+
+            //ZONE 3
+            case 3:
+            if(parsed_GET[2].charAt(0) == 'O')
+                {
+                    if(ZoneState[2] == 'O')
+                    {
+                        break;
+                    }                    
+                    else
+                    {
+                        ZoneState[2] = 'O';
+                        digitalWrite(ZONE3_PIN_OUT,OPEN);                        
+                        break;
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'C')
+                {
+                    if(ZoneState[2] == 'C')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[2] = 'C';                        
+                        digitalWrite(ZONE3_PIN_OUT,CLOSE);                        
+
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'A')
+                {
+                    ZoneState[2] = 'A';
+                }
+                
+            break;
+
+            //ZONE 4
+            case 4:
+            if(parsed_GET[2].charAt(0) == 'O')
+                {
+                    if(ZoneState[3] == 'O')
+                    {
+                        break;
+                    }                    
+                    else
+                    {
+                        ZoneState[3] = 'O';
+                        digitalWrite(ZONE4_PIN_OUT,OPEN);                        
+                        break;
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'C')
+                {
+                    if(ZoneState[3] == 'C')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[3] = 'C';                        
+                        digitalWrite(ZONE4_PIN_OUT,CLOSE);                        
+
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'A')
+                {
+                    ZoneState[1] = 'A';
+                }
+
+            break;
+
+            case 5:
+           if(parsed_GET[2].charAt(0) == 'O')
+                {
+                    if(ZoneState[4] == 'O')
+                    {
+                        break;
+                    }                    
+                    else
+                    {
+                        ZoneState[4] = 'O';
+                        digitalWrite(ZONE5_PIN_OUT,OPEN);                        
+                        break;
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'C')
+                {
+                    if(ZoneState[4] == 'C')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[4] = 'C';                        
+                        digitalWrite(ZONE5_PIN_OUT,CLOSE);                        
+
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'A')
+                {
+                    ZoneState[4] = 'A';
+                }
+                
+            break;
+
+            //ZONE 6
+            case 6:
+            if(parsed_GET[2].charAt(0) == 'O')
+                {
+                    if(ZoneState[5] == 'O')
+                    {
+                        break;
+                    }                    
+                    else
+                    {
+                        ZoneState[5] = 'O';
+                        digitalWrite(ZONE6_PIN_OUT,OPEN);                        
+                        break;
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'C')
+                {
+                    if(ZoneState[5] == 'C')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[5] = 'C';                        
+                        digitalWrite(ZONE6_PIN_OUT,CLOSE);                        
+
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'A')
+                {
+                    ZoneState[5] = 'A';
+                }
+
+            break;
+
+            //ZONE 7
+            case 7:
+            if(parsed_GET[2].charAt(0) == 'O')
+                {
+                    if(ZoneState[6] == 'O')
+                    {
+                        break;
+                    }                    
+                    else
+                    {
+                        ZoneState[6] = 'O';
+                        digitalWrite(ZONE7_PIN_OUT,OPEN);                        
+                        break;
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'C')
+                {
+                    if(ZoneState[6] == 'C')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[6] = 'C';                        
+                        digitalWrite(ZONE7_PIN_OUT,CLOSE);                        
+
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'A')
+                {
+                    ZoneState[6] = 'A';
+                }
+            break;
+
+            //ZONE 8
+            case 8:
+            if(parsed_GET[2].charAt(0) == 'O')
+                {
+                    if(ZoneState[7] == 'O')
+                    {
+                        break;
+                    }                    
+                    else
+                    {
+                        ZoneState[7] = 'O';
+                        digitalWrite(ZONE8_PIN_OUT,OPEN);                        
+                        break;
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'C')
+                {
+                    if(ZoneState[7] == 'C')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[7] = 'C';                        
+                        digitalWrite(ZONE8_PIN_OUT,CLOSE);                        
+
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'A')
+                {
+                    ZoneState[7] = 'A';
+                }
+            break;
+
+            case 9:
+            if(parsed_GET[2].charAt(0) == 'O')
+                {
+                    if(ZoneState[8] == 'O')
+                    {
+                        break;
+                    }                    
+                    else
+                    {
+                        ZoneState[8] = 'O';
+                        digitalWrite(ZONE9_PIN_OUT,OPEN);                        
+                        break;
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'C')
+                {
+                    if(ZoneState[8] == 'C')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[8] = 'C';                        
+                        digitalWrite(ZONE9_PIN_OUT,CLOSE);                        
+
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'A')
+                {
+                    ZoneState[8] = 'A';
+                }
+            break;
+
+            //ZONE 10
+            case 10:
+            if(parsed_GET[2].charAt(0) == 'O')
+                {
+                    if(ZoneState[9] == 'O')
+                    {
+                        break;
+                    }                    
+                    else
+                    {
+                        ZoneState[9] = 'O';
+                        digitalWrite(ZONE10_PIN_OUT,OPEN);                        
+                        break;
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'C')
+                {
+                    if(ZoneState[9] == 'C')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[9] = 'C';                        
+                        digitalWrite(ZONE10_PIN_OUT,CLOSE);                        
+
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'A')
+                {
+                    ZoneState[9] = 'A';
+                }
+            break;
+
+            case 11:
+            if(parsed_GET[2].charAt(0) == 'O')
+                {
+                    if(ZoneState[10] == 'O')
+                    {
+                        break;
+                    }                    
+                    else
+                    {
+                        ZoneState[10] = 'O';
+                        digitalWrite(ZONE11_PIN_OUT,OPEN);                        
+                        break;
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'C')
+                {
+                    if(ZoneState[10] == 'C')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[10] = 'C';                        
+                        digitalWrite(ZONE11_PIN_OUT,CLOSE);                        
+
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'A')
+                {
+                    ZoneState[1] = 'A';
+                }   
+            break;
+
+            case 12:
+            if(parsed_GET[2].charAt(0) == 'O')
+                {
+                    if(ZoneState[11] == 'O')
+                    {
+                        break;
+                    }                    
+                    else
+                    {
+                        ZoneState[11] = 'O';
+                        digitalWrite(ZONE12_PIN_OUT,OPEN);                        
+                        break;
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'C')
+                {
+                    if(ZoneState[11] == 'C')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[11] = 'C';                        
+                        digitalWrite(ZONE12_PIN_OUT,CLOSE);                        
+
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'A')
+                {
+                    ZoneState[11] = 'A';
+                }
+            break;
+
+            case 13:
+            if(parsed_GET[2].charAt(0) == 'O')
+                {
+                    if(ZoneState[12] == 'O')
+                    {
+                        break;
+                    }                    
+                    else
+                    {
+                        ZoneState[12] = 'O';
+                        digitalWrite(ZONE13_PIN_OUT,OPEN);                        
+                        break;
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'C')
+                {
+                    if(ZoneState[12] == 'C')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[12] = 'C';                        
+                        digitalWrite(ZONE13_PIN_OUT,CLOSE);                        
+
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'A')
+                {
+                    ZoneState[12] = 'A';
+                }
+            break;
+
+            case 14:
+            if(parsed_GET[2].charAt(0) == 'O')
+                {
+                    if(ZoneState[13] == 'O')
+                    {
+                        break;
+                    }                    
+                    else
+                    {
+                        ZoneState[13] = 'O';
+                        digitalWrite(ZONE14_PIN_OUT,OPEN);                        
+                        break;
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'C')
+                {
+                    if(ZoneState[13] == 'C')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[13] = 'C';                        
+                        digitalWrite(ZONE14_PIN_OUT,CLOSE);                        
+
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'A')
+                {
+                    ZoneState[13] = 'A';
+                }
+            break;
+
+            case 15:
+            if(parsed_GET[2].charAt(0) == 'O')
+                {
+                    if(ZoneState[14] == 'O')
+                    {
+                        break;
+                    }                    
+                    else
+                    {
+                        ZoneState[14] = 'O';
+                        digitalWrite(ZONE15_PIN_OUT,OPEN);                        
+                        break;
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'C')
+                {
+                    if(ZoneState[14] == 'C')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[14] = 'C';                        
+                        digitalWrite(ZONE15_PIN_OUT,CLOSE);                        
+
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'A')
+                {
+                    ZoneState[14] = 'A';
+                }
+            break;
+
+            case 16:
+            if(parsed_GET[2].charAt(0) == 'O')
+                {
+                    if(ZoneState[15] == 'O')
+                    {
+                        break;
+                    }                    
+                    else
+                    {
+                        ZoneState[15] = 'O';
+                        digitalWrite(ZONE16_PIN_OUT,OPEN);                        
+                        break;
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'C')
+                {
+                    if(ZoneState[15] == 'C')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ZoneState[15] = 'C';                        
+                        digitalWrite(ZONE16_PIN_OUT,CLOSE);                        
+
+                    }
+                }
+
+                else if(parsed_GET[2].charAt(0) == 'A')
+                {
+                    ZoneState[15] = 'A';
+                }
+
+            break;
+        }
     }
 
     if(parsed_GET[0].equals("setup"))
     {
-        Serial.println("FUCK YES");
-    }
-
-    if(parsed_GET[0].equals("button"))
-    {
-        Serial.println("FUCK YES");
-    }
-    ///////////////////////////////
-    if (StrContains(HTTP_req, "Zone1=on")) 
-    {
-        ZoneState[0] = 1;  // save zone1 state
-        digitalWrite(6, HIGH); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone1=off")) 
-    {
-        ZoneState[0] = 0;  // save zone1 state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone1=auto")) 
-    {
-        ZoneState[0] = 0;  // save zone1 state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
+        int zone_update = parsed_GET[1].toInt();
+        zone_update = zone_update-1; //CONVERT TO 0 BASED NUMBERING
 
 
-    if (StrContains(HTTP_req, "Zone2=1")) 
-    {
-        ZoneState[1] = 1;  // save zone2 state
-        digitalWrite(6, HIGH); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone2=0")) 
-    {
-        ZoneState[1] = 0;  // save zone2 state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
-    
-    if (StrContains(HTTP_req, "Zone3=1")) 
-    {
-        ZoneState[2] = 1;  // save zone3 state
-        digitalWrite(6, HIGH); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone3=0")) 
-    {
-        ZoneState[2] = 0;  // save zone3 state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
+        zone[zone_update].Name = parsed_GET[2];
+        zone[zone_update].Visible = parsed_GET[3].toInt();
 
-    if (StrContains(HTTP_req, "Zone4=1")) 
-    {
-        ZoneState[3] = 1;  // save zone4 state
-        digitalWrite(6, HIGH); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone4=0")) 
-    {
-        ZoneState[3] = 0;  // save zone4 state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
-    
-    if (StrContains(HTTP_req, "Zone5=1")) 
-    {
-        ZoneState[4] = 1;  // save zone state
-        digitalWrite(6, HIGH); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone5=0")) 
-    {
-        ZoneState[4] = 0;  // save zone state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
 
-    if (StrContains(HTTP_req, "Zone6=1")) 
-    {
-        ZoneState[5] = 1;  // save zone state
-        digitalWrite(6, HIGH); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone6=0")) 
-    {
-        ZoneState[5] = 0;  // save zone state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
-
-    if (StrContains(HTTP_req, "Zone7=1")) 
-    {
-        ZoneState[6] = 1;  // save zone state
-        digitalWrite(6, HIGH); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone7=0")) 
-    {
-        ZoneState[6] = 0;  // save zone state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
-
-    if (StrContains(HTTP_req, "Zone8=1")) 
-    {
-        ZoneState[7] = 1;  // save zone state
-        digitalWrite(6, HIGH); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone8=0")) 
-    {
-        ZoneState[7] = 0;  // save zone state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
-
-    if (StrContains(HTTP_req, "Zone9=1")) 
-    {
-        ZoneState[8] = 1;  // save zone state
-        digitalWrite(6, HIGH); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone9=0")) 
-    {
-        ZoneState[8] = 0;  // save zone state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
-
-    if (StrContains(HTTP_req, "Zone10=1")) 
-    {
-        ZoneState[9] = 1;  // save zone state
-        digitalWrite(6, HIGH); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone10=0")) 
-    {
-        ZoneState[9] = 0;  // save zone state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
-
-    if (StrContains(HTTP_req, "Zone11=1")) 
-    {
-        ZoneState[10] = 1;  // save zone state
-        digitalWrite(6, HIGH); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone11=0")) 
-    {
-        ZoneState[10] = 0;  // save zone state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
-
-    if (StrContains(HTTP_req, "Zone12=1")) 
-    {
-        ZoneState[11] = 1;  // save zone state
-        digitalWrite(6, HIGH); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone12=0")) 
-    {
-        ZoneState[11] = 0;  // save zone state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
-
-    if (StrContains(HTTP_req, "Zone13=1")) 
-    {
-        ZoneState[12] = 1;  // save zone state
-        digitalWrite(6, HIGH); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone13=0")) 
-    {
-        ZoneState[12] = 0;  // save zone state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
-
-    if (StrContains(HTTP_req, "Zone14=1")) 
-    {
-        ZoneState[13] = 1;  // save zone state
-        digitalWrite(6, HIGH); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone14=0")) 
-    {
-        ZoneState[13] = 0;  // save zone state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
-
-    if (StrContains(HTTP_req, "Zone15=1")) 
-    {
-        ZoneState[14] = 1;  // save zone state
-        digitalWrite(6, HIGH); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone15=0")) 
-    {
-        ZoneState[14] = 0;  // save zone state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
-
-    if (StrContains(HTTP_req, "Zone16=1")) 
-    {
-        ZoneState[15] = 1;  // save zone state
-        digitalWrite(6, HIGH); //TODO: define pin 
-    }
-    else if (StrContains(HTTP_req, "Zone16=0")) 
-    {
-        ZoneState[15] = 0;  // save zone state
-        digitalWrite(6, LOW); //TODO: define pin 
-    }
-
-    if (StrContains(HTTP_req, "setup"))
-    {
-            //WRITE SD_CARD
-        // while(SD.exists("config.h"))
-        // {
-        //     Serial.println("removing previous config");
-        //     SD.remove("config.h");
-        // }
-        // return_file = SD.open("config.h", FILE_WRITE);        // open web page file
-        //     if (return_file) 
-        //     {
-        //         for(int i = 0; i<NUM_ZONES; i++)
-        //         {
-        //             return_file.print( (String) zone[i].Name);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].Visible);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].Time1);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].duration1);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].Time2);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].duration2);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].Time3);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].duration3);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].Time4);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].duration4);
-        //             return_file.print(",");
-        //             Serial.println(zone[i].Name);
-        //         }
-            
-        //         Serial.println("Finished Writing to SD");
-        //         return_file.close();
-        //     }
-        //     else
-        //     {
-        //         Serial.println("Couldn't write to config.h");
-        //     }
-        //END WRITE SD CARD
+        if(SD.exists("config.h"))
+        {
+            SD.remove("config.h");
         }
-}
+        File config_file = SD.open("config.h", FILE_WRITE);
+        if (config_file) {
+            for(int i =0; i< NUM_ZONES; i++)
+            {
+                config_file.print(zone[i].Name);
+                config_file.print(",");
+                config_file.print(zone[i].Visible);
+                config_file.print(",");
+                config_file.print(zone[i].Time1);
+                config_file.print(",");
+                config_file.print(zone[i].duration1);
+                config_file.print(",");                
+                config_file.print(zone[i].Time2);
+                config_file.print(",");
+                config_file.print(zone[i].duration2);
+                config_file.print(",");                
+                config_file.print(zone[i].Time3);
+                config_file.print(",");
+                config_file.print(zone[i].duration3);
+                config_file.print(",");
 
-void config_parse()
-{
-    Serial.println("enter config_parse function");
-    temp_string = Http_req_full;    
-    int comma_position = Http_req_full.indexOf(',');
-    for( int i =0; i<NUM_ZONES; i++)
-    {
-           
+            }
+        }
+        config_file.close();
+
     }
 
-}
+    if(parsed_GET[0].equals("config"))
+    {
+        int zone_update = parsed_GET[1].toInt();
+        zone_update = zone_update-1; //CONVERT TO 0 BASED NUMBERING
+        zone[zone_update].Time1 = parsed_GET[2];
+        zone[zone_update].duration1 = parsed_GET[3].toInt();
+        zone[zone_update].Time2 = parsed_GET[4];
+        zone[zone_update].duration2 = parsed_GET[5].toInt();
+        zone[zone_update].Time3 = parsed_GET[6];
+        zone[zone_update].duration3 = parsed_GET[7].toInt();
 
-void setup_parse()
-{
+        //UPDATE config.h
+        if(SD.exists("config.h"))
+        {
+            SD.remove("config.h");
+        }
+        File config_file = SD.open("config.h", FILE_WRITE);
+        if (config_file) {
+            for(int i =0; i< NUM_ZONES; i++)
+            {
+                config_file.print(zone[i].Name);
+                config_file.print(",");
+                config_file.print(zone[i].Visible);
+                config_file.print(",");
+                config_file.print(zone[i].Time1);
+                config_file.print(",");
+                config_file.print(zone[i].duration1);
+                config_file.print(",");                
+                config_file.print(zone[i].Time2);
+                config_file.print(",");
+                config_file.print(zone[i].duration2);
+                config_file.print(",");                
+                config_file.print(zone[i].Time3);
+                config_file.print(",");
+                config_file.print(zone[i].duration3);
+                config_file.print(",");
 
-    Serial.println("enter setup_parse function");
-
+            }
+        }
+        config_file.close();
+    }
     
 }
 
@@ -531,13 +939,9 @@ void XML_response(EthernetClient cl)
         cl.print(zone[i].duration3);
         cl.print("</duration3>");
 
-        cl.print("<time4>");
-        cl.print(zone[i].Time4);
-        cl.print("</time4>");
-
-        cl.print("<duration4>");
-        cl.print(zone[i].duration4);
-        cl.print("</duration4>");
+        cl.print("<state>");
+        cl.print(Zone_States[i]);
+        cl.print("</state>");
 
 
     }
@@ -684,10 +1088,6 @@ void water_time(void)
 
             }
             else if (zone[i].Time3.equals(time) && ZoneState[i] == 'A')
-            {
-                
-            }
-            else if (zone[i].Time4.equals(time) && ZoneState[i] == 'A')
             {
                 
             }

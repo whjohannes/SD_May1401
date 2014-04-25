@@ -19,11 +19,18 @@ String Time2;
 int  duration2;
 String Time3; 
 int  duration3;
-String Time4; 
-int  duration4;
 } zone_properties;
 
 #endif
+
+#ifndef OPEN
+#define OPEN LOW
+#endif
+
+#ifndef CLOSE
+#define CLOSE HIGH
+#endif
+
 
 //Define output pins/ input (flow sensor) for relay board
 #ifndef ZONE1_PIN_OUT
@@ -91,3 +98,66 @@ int  duration4;
 #endif
 
 //INPUTS
+#ifndef ZONE1_PIN_IN
+#define ZONE1_PIN_IN 36
+#endif
+
+#ifndef ZONE2_PIN_IN
+#define ZONE2_PIN_IN 34
+#endif
+
+#ifndef ZONE3_PIN_IN
+#define ZONE3_PIN_IN 32
+#endif
+
+#ifndef ZONE4_PIN_IN
+#define ZONE4_PIN_IN 30
+#endif
+
+#ifndef ZONE5_PIN_IN
+#define ZONE5_PIN_IN 28
+#endif
+
+#ifndef ZONE6_PIN_IN
+#define ZONE6_PIN_IN 26
+#endif
+
+#ifndef ZONE7_PIN_IN
+#define ZONE7_PIN_IN 24
+#endif
+
+#ifndef ZONE8_PIN_IN
+#define ZONE8_PIN_IN 22
+#endif
+
+#ifndef ZONE9_PIN_IN
+#define ZONE9_PIN_IN 52
+#endif
+
+#ifndef ZONE10_PIN_IN
+#define ZONE10_PIN_IN 50
+#endif
+
+#ifndef ZONE11_PIN_IN
+#define ZONE11_PIN_IN 48
+#endif
+
+#ifndef ZONE12_PIN_IN
+#define ZONE12_PIN_IN 46
+#endif
+
+#ifndef ZONE13_PIN_IN
+#define ZONE13_PIN_IN 44
+#endif
+
+#ifndef ZONE14_PIN_IN
+#define ZONE14_PIN_IN 42
+#endif
+
+#ifndef ZONE15_PIN_IN
+#define ZONE15_PIN_IN 40
+#endif
+
+#ifndef ZONE16_PIN_IN
+#define ZONE16_PIN_IN 38
+#endif
