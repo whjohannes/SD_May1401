@@ -160,8 +160,4 @@ int  duration3;
 
 #ifndef ZONE16_PIN_IN
 #define ZONE16_PIN_IN 38
-<<<<<<< HEAD
 #endif
-=======
-#endif
->>>>>>> FETCH_HEAD

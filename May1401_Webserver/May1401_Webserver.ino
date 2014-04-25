@@ -373,8 +373,6 @@ void Zone_States(void)
                     {
                         ZoneState[3] = 'C';                        
                         digitalWrite(ZONE4_PIN_OUT,CLOSE);                        
-
-<<<<<<< HEAD
                     }
                 }
 
@@ -811,49 +809,7 @@ void Zone_States(void)
                 }
 
             break;
-=======
-    if (StrContains(HTTP_req, "setup"))
-    {
-            //WRITE SD_CARD
-        // while(SD.exists("config.h"))
-        // {
-        //     Serial.println("removing previous config");
-        //     SD.remove("config.h");
-        // }
-        // return_file = SD.open("config.h", FILE_WRITE);        // open web page file
-        //     if (return_file) 
-        //     {
-        //         for(int i = 0; i<NUM_ZONES; i++)
-        //         {
-        //             return_file.print( (String) zone[i].Name);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].Visible);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].Time1);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].duration1);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].Time2);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].duration2);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].Time3);
-        //             return_file.print(",");
-        //             return_file.print(zone[i].duration3);
-        //             return_file.print(",");
-        //             Serial.println(zone[i].Name);
-        //         }
-            
-        //         Serial.println("Finished Writing to SD");
-        //         return_file.close();
-        //     }
-        //     else
-        //     {
-        //         Serial.println("Couldn't write to config.h");
-        //     }
-        //END WRITE SD CARD
->>>>>>> FETCH_HEAD
-        }
+
     }
 
     if(parsed_GET[0].equals("setup"))
@@ -939,6 +895,7 @@ void Zone_States(void)
         config_file.close();
     }
     
+    }
 }
 
 // send the XML file
@@ -982,14 +939,9 @@ void XML_response(EthernetClient cl)
         cl.print(zone[i].duration3);
         cl.print("</duration3>");
 
-<<<<<<< HEAD
         cl.print("<state>");
-        cl.print(Zone_States[i]);
+        cl.print(ZoneState[i]);
         cl.print("</state>");
-
-
-=======
->>>>>>> FETCH_HEAD
     }
     
     cl.print("</zones>");
