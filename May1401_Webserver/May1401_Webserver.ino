@@ -21,7 +21,7 @@ with an Ethernet shield using the WizNet chipset.
 
 // MAC address from Ethernet shield sticker under board
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-IPAddress ip(192, 168, 8, 177); // IP address, may need to change depending on network
+IPAddress ip(192, 168, 1, 177); // IP address, may need to change depending on network
 EthernetServer server(80);  // create a server at port 80
 
 unsigned int localPort = 8888;      // local port to listen for UDP packets
@@ -48,6 +48,9 @@ int time_check =0;
 char after_noon = 'A';
 String time = "";
 
+//TODO: IMPLEMENT LOG FILE AND USER LIST
+//char //log_file[LOG_SIZE][LOG_MESSAGE] = {0};
+//char email_list[NUM_USERS][30] = {0};
 
 
 // typedef struct 
@@ -228,25 +231,34 @@ void Zone_States(void)
 {
     if(parsed_GET[0].equals("button")) //EXAMPLE GET REQUEST: "&button,1,A"
     {
-        // if(parsed_GET[1].toInt() == 1)
-        // {
-        //     Serial.print("parsed_GET[1].toint: ");
-        //     Serial.println(parsed_GET[1].toInt());
-        // }
         switch(parsed_GET[1].toInt())
         {
             //ZONE 1
             case 1:         
                 if(parsed_GET[2].charAt(0) == 'O')
                 {
+                    Serial.println("top level");
                     if(ZoneState[0] == 'O')
                     {
                         break;
                     }
                     else
                     {
+                        Serial.println("enter");
                         ZoneState[0] = 'O';
                         digitalWrite(ZONE1_PIN_OUT,OPEN);
+                        //log_file[ZONE1][0] = 'O';
+                        //log_file[ZONE1][1] = 'M';
+                        //for(int i =0; i< time.length(); i++)
+                        //{
+                        //    //log_file[ZONE1][i+2] = time.charAt(i);
+                        //}
+
+                        //for (int i =0; i< 10; i++)
+                        //{
+                        //    Serial.print(//log_file[ZONE1][i]);
+                        //}
+
                         break;
                     }
                 }
@@ -261,7 +273,12 @@ void Zone_States(void)
                     {
                         ZoneState[0] = 'C';
                         digitalWrite(ZONE1_PIN_OUT,CLOSE);
-
+                        //log_file[ZONE1][0] = 'C';
+                        //log_file[ZONE1][1] = 'M';
+                        //for(int i =0; i< time.length(); i++)
+                        //{
+                        //    log_file[ZONE1][i+2] = time.charAt(i);
+                        //}
 
                     }
                 }
@@ -284,7 +301,15 @@ void Zone_States(void)
                     else
                     {
                         ZoneState[1] = 'O';
-                        digitalWrite(ZONE2_PIN_OUT,OPEN);                        
+                        digitalWrite(ZONE2_PIN_OUT,OPEN); 
+                        //log_file[ZONE2][0] = 'O';
+                        //log_file[ZONE2][1] = 'M';
+                        for(int i =0; i< time.length(); i++)
+                        {
+                            //log_file[ZONE1][i+2] = time.charAt(i);
+                        }  
+
+                     
                         break;
                     }
                 }
@@ -298,7 +323,9 @@ void Zone_States(void)
                     else
                     {
                         ZoneState[1] = 'C';                        
-                        digitalWrite(ZONE2_PIN_OUT,CLOSE);                        
+                        digitalWrite(ZONE2_PIN_OUT,CLOSE);    
+
+                    
 
                     }
                 }
@@ -321,7 +348,8 @@ void Zone_States(void)
                     else
                     {
                         ZoneState[2] = 'O';
-                        digitalWrite(ZONE3_PIN_OUT,OPEN);                        
+                        digitalWrite(ZONE3_PIN_OUT,OPEN);     
+              
                         break;
                     }
                 }
@@ -335,7 +363,7 @@ void Zone_States(void)
                     else
                     {
                         ZoneState[2] = 'C';                        
-                        digitalWrite(ZONE3_PIN_OUT,CLOSE);                        
+                        digitalWrite(ZONE3_PIN_OUT,CLOSE);   
 
                     }
                 }
@@ -358,7 +386,8 @@ void Zone_States(void)
                     else
                     {
                         ZoneState[3] = 'O';
-                        digitalWrite(ZONE4_PIN_OUT,OPEN);                        
+                        digitalWrite(ZONE4_PIN_OUT,OPEN);  
+             
                         break;
                     }
                 }
@@ -372,7 +401,8 @@ void Zone_States(void)
                     else
                     {
                         ZoneState[3] = 'C';                        
-                        digitalWrite(ZONE4_PIN_OUT,CLOSE);                        
+                        digitalWrite(ZONE4_PIN_OUT,CLOSE);  
+                
                     }
                 }
 
@@ -386,35 +416,37 @@ void Zone_States(void)
             case 5:
            if(parsed_GET[2].charAt(0) == 'O')
                 {
-                    if(ZoneState[4] == 'O')
+                    if(ZoneState[ZONE5] == 'O')
                     {
                         break;
                     }                    
                     else
                     {
-                        ZoneState[4] = 'O';
-                        digitalWrite(ZONE5_PIN_OUT,OPEN);                        
+                        ZoneState[ZONE5] = 'O';
+                        digitalWrite(ZONE5_PIN_OUT,OPEN);  
+                  
                         break;
                     }
                 }
 
                 else if(parsed_GET[2].charAt(0) == 'C')
                 {
-                    if(ZoneState[4] == 'C')
+                    if(ZoneState[ZONE5] == 'C')
                     {
                         break;
                     }
                     else
                     {
-                        ZoneState[4] = 'C';                        
-                        digitalWrite(ZONE5_PIN_OUT,CLOSE);                        
+                        ZoneState[ZONE5] = 'C';                        
+                        digitalWrite(ZONE5_PIN_OUT,CLOSE);   
+           
 
                     }
                 }
 
                 else if(parsed_GET[2].charAt(0) == 'A')
                 {
-                    ZoneState[4] = 'A';
+                    ZoneState[ZONE5] = 'A';
                 }
                 
             break;
@@ -423,35 +455,37 @@ void Zone_States(void)
             case 6:
             if(parsed_GET[2].charAt(0) == 'O')
                 {
-                    if(ZoneState[5] == 'O')
+                    if(ZoneState[ZONE6] == 'O')
                     {
                         break;
                     }                    
                     else
                     {
-                        ZoneState[5] = 'O';
-                        digitalWrite(ZONE6_PIN_OUT,OPEN);                        
+                        ZoneState[ZONE6] = 'O';
+                        digitalWrite(ZONE6_PIN_OUT,OPEN);
+                   
                         break;
                     }
                 }
 
                 else if(parsed_GET[2].charAt(0) == 'C')
                 {
-                    if(ZoneState[5] == 'C')
+                    if(ZoneState[ZONE6] == 'C')
                     {
                         break;
                     }
                     else
                     {
-                        ZoneState[5] = 'C';                        
-                        digitalWrite(ZONE6_PIN_OUT,CLOSE);                        
+                        ZoneState[ZONE6] = 'C';                        
+                        digitalWrite(ZONE6_PIN_OUT,CLOSE);
+                  
 
                     }
                 }
 
                 else if(parsed_GET[2].charAt(0) == 'A')
                 {
-                    ZoneState[5] = 'A';
+                    ZoneState[ZONE6] = 'A';
                 }
 
             break;
@@ -460,28 +494,30 @@ void Zone_States(void)
             case 7:
             if(parsed_GET[2].charAt(0) == 'O')
                 {
-                    if(ZoneState[6] == 'O')
+                    if(ZoneState[ZONE7] == 'O')
                     {
                         break;
                     }                    
                     else
                     {
-                        ZoneState[6] = 'O';
-                        digitalWrite(ZONE7_PIN_OUT,OPEN);                        
+                        ZoneState[ZONE7] = 'O';
+                        digitalWrite(ZONE7_PIN_OUT,OPEN);  
+                 
                         break;
                     }
                 }
 
                 else if(parsed_GET[2].charAt(0) == 'C')
                 {
-                    if(ZoneState[6] == 'C')
+                    if(ZoneState[ZONE7] == 'C')
                     {
                         break;
                     }
                     else
                     {
-                        ZoneState[6] = 'C';                        
-                        digitalWrite(ZONE7_PIN_OUT,CLOSE);                        
+                        ZoneState[ZONE7] = 'C';                        
+                        digitalWrite(ZONE7_PIN_OUT,CLOSE); 
+                      
 
                     }
                 }
@@ -945,6 +981,8 @@ void XML_response(EthernetClient cl)
     }
     
     cl.print("</zones>");
+
+
 }
 
 // sets every element of str to 0 (clears array)
@@ -960,12 +998,13 @@ void StrClear(char *str, char length)
 // returns 0 if string not found
 char StrContains(char *str, char *sfind)
 {
+    Serial.print("test ");
     char found = 0;
     char index = 0;
     char len;
 
     len = strlen(str);
-    
+    Serial.println((int)len);
     if (strlen(sfind) > len) {
         return 0;
     }

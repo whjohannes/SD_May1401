@@ -6,9 +6,8 @@
 
 #ifndef Globals_h
 #define Globals_h
-
-#include <Wstring.h>
-
+#endif
+ 
 typedef struct
 {
 String Name; 
@@ -21,7 +20,26 @@ String Time3;
 int  duration3;
 } zone_properties;
 
-#endif
+typedef enum zone_list 
+{ 
+	ZONE1, 
+	ZONE2,
+	ZONE3,
+	ZONE4,
+	ZONE5,
+	ZONE6,
+	ZONE7,
+	ZONE8,
+	ZONE9,
+	ZONE10,
+	ZONE11,
+	ZONE12,
+	ZONE13,
+	ZONE14,
+	ZONE15,
+	ZONE16
+};
+
 
 #ifndef OPEN
 #define OPEN LOW
@@ -31,6 +49,17 @@ int  duration3;
 #define CLOSE HIGH
 #endif
 
+#ifndef LOG_SIZE
+#define LOG_SIZE 25
+#endif
+
+#ifndef LOG_MESSAGE
+#define LOG_MESSAGE 20
+#endif
+
+#ifndef NUM_USERS
+#define NUM_USERS 4
+#endif
 
 //Define output pins/ input (flow sensor) for relay board
 #ifndef ZONE1_PIN_OUT
